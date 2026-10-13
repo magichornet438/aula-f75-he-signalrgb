@@ -32,4 +32,4 @@ One unit has passed short and multi-minute manual tests; continuous long-term st
 
 ## Source
 
-The plugin file is **byte-for-byte identical to the user's privately tested v35 file**. Its filename and internal Private test name are preserved intentionally. No license is included; repository owner should decide licensing before allowing redistribution.
+The plugin file is **byte-for-byte identical to the user's privately tested v35 file**. Its filename and internal Private test name are preserved intentionally. No license is included
