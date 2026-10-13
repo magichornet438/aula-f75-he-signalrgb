@@ -1,46 +1,45 @@
 # AULA F75 HE — Experimental SignalRGB plugin
 
-**Unofficial community beta, v1.0.1-beta.** Per-key RGB for the **wired AULA F75 HE**, using SignalRGB effects and colors. Tested on one keyboard using firmware **1.55** and SignalRGB **2.5.74**. Not affiliated with AULA or SignalRGB.
+**Unofficial community beta: v1.0.2-beta (v37).** Continuous per-key SignalRGB effects for the **wired AULA F75 HE** Hall Effect keyboard. This is a community project, not affiliated with AULA or SignalRGB.
 
-## Latest release: v1.0.1-beta (v36)
+## What's new in v1.0.2-beta
 
-**Fix:** v1.0.0-beta (v35) could let static colors or paused effects revert to the keyboard's onboard Rainbow mode after a few seconds of USB inactivity. The updated v36 driver repeats the last unchanged, validated six-packet RGB frame about **every 750 ms**, keeping a static or paused color active. It retains the previously tested Esc RGB flicker fix.
+**Automatic RGB synchronization after SignalRGB starts.** v36 required selecting **OFF → LIVE** manually after launching SignalRGB. v37 defaults to LIVE for new installations, waits approximately **3 seconds** after initialization, then streams your currently selected SignalRGB effect automatically. OFF is still selectable and should remain selected if SignalRGB preserves that preference. The USB packet transport is unchanged from v36.
+
+The developer physically confirmed that v37 resumes syncing after force-closing and relaunching SignalRGB. **Automatic startup after a full Windows restart has not yet been confirmed on hardware.** SignalRGB itself must be configured to launch with Windows for boot-time sync.
 
 ## Features
 
-- Follows the **actual per-key colors** of SignalRGB's canvas: solid colors, Rainbow, gradients, waves and other supported effects.
-- Continuous manual **LIVE** mode (no ten-minute cutoff).
-- Approximately **10 FPS** full RGB updates with animated effects, as measured on one keyboard; static colors use low-frequency keepalive instead of streaming at full speed.
-- Six-packet USB protocol, ACK verification, fail-closed error stop, 70 ms minimum frame-start spacing, Esc LED padding fix, and explicit startup OFF lock.
-
-## Important safety warning
-
-**Experimental; not certified for indefinite/unattended use.** Earlier experimental high-speed prototypes caused stuck or repeating Esc/Delete input, although the current build worked during its owner's supervised testing. A valid USB acknowledgment **does not prove typing safety**. Save work and supervise your initial use. If any input behaves abnormally, exit SignalRGB immediately, unplug the keyboard for **30 seconds**, reconnect and revert to stock software or the earlier tested version. **Do not run AULA Hub and SignalRGB simultaneously.**
+- Samples real per-key colors from SignalRGB: solid colors, gradients, Rainbow, waves, and other supported effects
+- Continuous effects at approximately **10 FPS** on the tested keyboard
+- Paused and static colors held using a **750 ms** periodic RGB keepalive (v36 fix)
+- **Esc RGB flicker fix**, six-packet-per-frame packed protocol, verified HID acknowledgments, frame watchdog and failure lockout
+- Manual OFF switch; automatically starts LIVE after SignalRGB initializes (with a 3-second delay)
 
 ## Compatibility
 
-- **Wired** AULA F75 HE keyboard only: USB VID `38A6`, PID `2729`, HID interface `2`, usage page `FF68`, usage `0061`.
-- Verified on **one** keyboard with firmware **1.55**; other firmware, devices and wireless modes untested.
+- **Wired AULA F75 HE only** — USB VID/PID `38A6:2729`, HID interface 2, usage page `FF68`, usage `0061`
+- Tested on one keyboard with firmware **1.55** and SignalRGB **2.5.74**
+- Untested on wireless modes, other F75 models, other firmware versions, or additional hardware units
 
-## Installation
+## Install
 
-1. Download the latest `.js` plugin from the [v1.0.1-beta release](https://github.com/magichornet438/aula-f75-he-signalrgb/releases/tag/v1.0.1-beta) or from [`Plugins/AULA_F75_HE_SignalRGB_Keepalive_v36_PRIVATE.js`](Plugins/AULA_F75_HE_SignalRGB_Keepalive_v36_PRIVATE.js).
-2. Fully close SignalRGB and AULA Hub. Back up any existing AULA custom plugin **outside** the active Plugins folder.
-3. Put **only the v36 `.js`** into SignalRGB's custom Plugins folder. Remove the active v35 copy and other F75 HE plugins to avoid duplicate IDs.
-4. Restart SignalRGB and select the keyboard named `AULA F75 HE (Private static keepalive v36)`. The old PRIVATE label is **intentionally preserved because the JavaScript is identical to the hardware-tested file**.
-5. In plugin settings, explicitly select **OFF**, then **LIVE**. Choose any effect in SignalRGB. Try a static color and Pause; both should remain fixed instead of reverting to Rainbow.
-6. To stop USB writes, select **OFF**. OFF may leave the last lighting pattern displayed; unplug and reconnect if stock lighting does not return.
+1. Download [`AULA_F75_HE_SignalRGB_AutoStart_v37_PRIVATE.js`](Plugins/AULA_F75_HE_SignalRGB_AutoStart_v37_PRIVATE.js) or get the file from [v1.0.2-beta Releases](https://github.com/magichornet438/aula-f75-he-signalrgb/releases/tag/v1.0.2-beta).
+2. Fully close **SignalRGB and AULA Hub**. Back up your previous F75 HE plugin **outside** the active SignalRGB Plugins folder.
+3. Remove old AULA F75 HE custom plugin files from the active Plugins folder to prevent duplicate USB device registrations. Install **only v37** in that folder.
+4. Launch SignalRGB, open the AULA F75 HE device, and select **LIVE - follow SignalRGB effects (no time limit)** if OFF was previously remembered. v37 normally starts LIVE automatically, approximately 3 seconds after initialization.
+5. Change your SignalRGB effect to any color or animation. Confirm **Esc**, **Backspace**, **Delete**, and normal typing behave correctly.
+6. For automatic startup after logging into Windows, enable SignalRGB under Windows Startup Apps. If you want to disable streaming, choose **OFF**.
 
-## Known limitations
+## Important safety warning
 
-- Per-key animation is about 10 FPS on the tested unit, not a guaranteed frame rate.
-- Static keepalive behavior is based on one user's physical test; long-term reliability on other keyboards is unknown.
-- Firmware and USB behavior may differ on other hardware revisions.
-- This plugin is **not** an official SignalRGB or AULA integration.
+**Experimental beta. Do not treat this as a proven reliable or unattended driver.** Previous aggressive prototype versions caused stuck/repeating keyboard input (notably Esc and Delete). The tested protocol performed well on one keyboard, but **passing USB ACK validation does not prove input safety**. **v37 automatically streams after startup**, which may surprise users upgrading from v36. Save work and supervise initial tests. If a key sticks or repeats, exit SignalRGB completely, disconnect the keyboard's USB cable for **30 seconds**, reconnect and return to the prior version or stock software. **Never run AULA Hub and SignalRGB together.**
 
-## Source and versions
+**Expected behavior:** If SignalRGB exits or Windows reboots, the keyboard may revert to its built-in Rainbow lighting until SignalRGB starts and reconnects. The plugin cannot retain live RGB while SignalRGB is not running. OFF stops USB writes but does not send an unverified stock-lighting restore command; unplug/reconnect if necessary.
 
-- **v1.0.1-beta:** [`Plugins/AULA_F75_HE_SignalRGB_Keepalive_v36_PRIVATE.js`](Plugins/AULA_F75_HE_SignalRGB_Keepalive_v36_PRIVATE.js) — latest, Pause/static-color fix.
-- **v1.0.0-beta:** [`Plugins/AULA_F75_HE_SignalRGB_Continuous_v35_PRIVATE.js`](Plugins/AULA_F75_HE_SignalRGB_Continuous_v35_PRIVATE.js) — retained for historical comparison; older version can fall back to Rainbow.
+## Previous releases
 
-No license is bundled. The maintainer should choose a license if they intend to permit redistribution or modifications.
+- [v1.0.1-beta / v36](https://github.com/magichornet438/aula-f75-he-signalrgb/releases/tag/v1.0.1-beta) — fixes static-color and Pause fallback to Rainbow (manual OFF → LIVE startup)
+- [v1.0.0-beta / v35](https://github.com/magichornet438/aula-f75-he-signalrgb/releases/tag/v1.0.0-beta) — initial experimental continuous per-key RGB driver
+
+No license has been selected for this project yet. The project owner can add one later.
